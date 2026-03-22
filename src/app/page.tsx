@@ -1,65 +1,133 @@
 import Image from "next/image";
+import { Info, BookOpen, CalendarDays, HeartHandshake } from "lucide-react";
+import Link from "next/link";
+import { mockArticles, mockChannels } from "@/data/mock";
 
 export default function Home() {
+  const iconMap: Record<string, any> = {
+    "介绍": Info,
+    "文化": BookOpen,
+    "活动": CalendarDays,
+    "服务": HeartHandshake,
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="min-h-screen relative overflow-hidden bg-[var(--color-zh-bg)] text-[var(--color-ink-800)]">
+       {/* Ink Wash Background Effects */}
+       <div className="ink-blur-bg w-[600px] h-[600px] bg-[var(--color-ink-200)]/30 top-[-10%] right-[-10%]"></div>
+       <div className="ink-blur-bg w-[800px] h-[800px] bg-[var(--color-ink-50)]/80 bottom-[-20%] left-[-20%]"></div>
+
+       {/* Header */}
+       <header className="px-8 py-8 md:px-16 flex justify-between items-center relative z-50 w-full mb-12">
+         {/* Seal Logo */}
+         <div className="flex items-center gap-4">
+           <div className="w-10 h-10 bg-transparent border-2 border-[var(--color-ink-seal)] flex items-center justify-center p-1 relative transform rotate-1 group hover:rotate-0 transition-transform duration-500">
+             <div className="w-full h-full bg-[var(--color-ink-seal)] flex flex-col items-center justify-center text-[var(--color-zh-bg)] leading-none text-xs font-bold pt-0.5 opacity-90" style={{ writingMode: 'vertical-rl' }}>
+               寻吾
+             </div>
+           </div>
+           <h1 className="text-2xl tracking-[0.3em] font-medium text-[var(--color-ink-900)]">寻吾书院</h1>
+         </div>
+         <nav className="space-x-12 text-sm hidden md:flex tracking-[0.2em] text-[var(--color-ink-600)]">
+           {mockChannels.map((channel) => (
+             <Link key={channel.id} href={`/channel/${channel.id}`} className="hover:text-[var(--color-ink-900)] transition-colors">
+               {channel.name}
+             </Link>
+           ))}
+           <Link href="/admin" className="hover:text-[var(--color-ink-seal)] transition-colors relative after:content-[''] after:absolute after:-bottom-3 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:rounded-full after:bg-[var(--color-ink-seal)] after:opacity-0 hover:after:opacity-100 after:transition-opacity duration-300">卷阁</Link>
+         </nav>
+       </header>
+
+       <div className="max-w-7xl mx-auto px-8 md:px-16 flex flex-col pb-32">
+         {/* Hero Section */}
+         <section className="mb-40 flex flex-col lg:flex-row items-center gap-24 relative mt-16">
+           <div className="flex-1 space-y-12 relative z-10">
+             <h2 className="text-6xl md:text-8xl font-light leading-[1.3] tracking-[0.1em] text-[var(--color-ink-900)] selection:bg-[var(--color-ink-seal)] selection:text-white">
+               行云<br/>
+               <span className="text-[var(--color-ink-400)] italic">流水</span><br/>
+               <span className="ml-[1em] relative inline-block">
+                 墨色<span className="text-[var(--color-ink-seal)] inline-block mx-1">千</span>秋
+               </span>
+             </h2>
+             <p className="text-lg md:text-xl text-[var(--color-ink-600)] leading-loose max-w-lg tracking-[0.2em] font-light">
+               留白天地间，寻吾本真意。<br/>传承千年昆仑风骨与翰墨书香。
+             </p>
+             <div className="pt-8">
+               <button className="px-12 py-4 bg-transparent text-[var(--color-ink-900)] border border-[var(--color-ink-900)] rounded-none hover:bg-[var(--color-ink-900)] hover:text-[var(--color-zh-bg)] transition-all duration-700 tracking-[0.3em] font-light text-sm relative group">
+                 <span className="absolute -left-2 top-1/2 -translate-y-1/2 w-1 h-1 bg-[var(--color-ink-seal)] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></span>
+                 入卷
+               </button>
+             </div>
+           </div>
+           
+           <div className="flex-1 w-full relative h-[600px] flex justify-end">
+             {/* Ink Wash Abstract Graphic */}
+             <div className="w-[80%] h-full border-r border-b border-[var(--color-ink-200)] relative opacity-70">
+               <div className="absolute top-10 left-10 w-full h-full border-t border-l border-[var(--color-ink-50)]"></div>
+               <div className="absolute top-[20%] right-[-10%] text-6xl text-[var(--color-ink-50)] tracking-widest" style={{ writingMode: 'vertical-rl' }}>
+                 大音希声 大象无形
+               </div>
+               
+               {/* Vertical Seal */}
+               <div className="absolute bottom-20 left-20 border border-[var(--color-ink-seal)]/30 p-2 opacity-80">
+                 <div className="w-6 h-16 bg-[var(--color-ink-seal)] flex items-center justify-center text-white text-[10px] tracking-widest" style={{ writingMode: 'vertical-rl' }}>
+                   甲辰
+                 </div>
+               </div>
+             </div>
+           </div>
+         </section>
+
+         {/* Categories Grid (Minimalist Lines) */}
+         <section className="space-y-16 mb-40">
+           <div className="grid grid-cols-1 md:grid-cols-4 border-y border-[var(--color-ink-200)]/60">
+             {mockChannels.map((cat, i) => {
+               const IconComponent = iconMap[cat.name] || Info;
+               return (
+                 <div key={cat.id} className={`group cursor-pointer p-12 relative flex flex-col items-center text-center ${i !== mockChannels.length - 1 ? 'md:border-r border-[var(--color-ink-200)]/60' : ''}`}>
+                   {/* Hover Ink Spread */}
+                   <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--color-ink-50)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+                   
+                   <IconComponent strokeWidth={1} className="w-8 h-8 mb-8 text-[var(--color-ink-400)] group-hover:text-[var(--color-ink-900)] transition-colors duration-500 relative z-10" />
+                   <h4 className="text-xl mb-4 tracking-[0.3em] font-medium text-[var(--color-ink-800)] relative z-10">{cat.name}</h4>
+                   <p className="text-[var(--color-ink-600)] tracking-[0.1em] text-xs leading-loose relative z-10 uppercase">{cat.description}</p>
+                   
+                   <div className="absolute top-4 right-4 w-1.5 h-1.5 bg-[var(--color-ink-seal)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                 </div>
+               );
+             })}
+           </div>
+         </section>
+
+         {/* Latest Articles Section (Vertical Layout) */}
+         <section className="space-y-24">
+           <div className="flex items-end justify-between border-b border-[var(--color-ink-900)] pb-6 relative">
+             <h3 className="text-2xl tracking-[0.4em] text-[var(--color-ink-900)] font-medium">寻吾卷宗</h3>
+             <span className="text-[var(--color-ink-400)] tracking-widest text-xs uppercase">最新修撰</span>
+             <div className="absolute bottom-0 right-0 w-8 h-0.5 bg-[var(--color-ink-seal)]"></div>
+           </div>
+           
+           <div className="flex flex-col">
+             {mockArticles.filter((a) => a.status === "已发布").slice(0, 4).map((article, index) => (
+               <Link href={`/article/${article.id}`} key={article.id} className="group py-12 border-b border-[var(--color-ink-200)]/60 flex flex-col md:flex-row md:items-center gap-8 md:gap-16 hover:bg-[var(--color-ink-50)]/50 transition-colors duration-700 px-6 -mx-6">                 
+                  <div className="w-32 flex-shrink-0">
+                    <span className="text-xs tracking-[0.2em] text-[var(--color-ink-600)] border border-[var(--color-ink-200)] px-4 py-2 block text-center group-hover:border-[var(--color-ink-800)] transition-colors duration-500">{article.category}</span>
+                  </div>
+                  
+                  <div className="flex-1 space-y-4">
+                    <h4 className="text-2xl tracking-[0.1em] font-medium text-[var(--color-ink-900)] group-hover:text-[var(--color-ink-seal)] transition-colors duration-500 line-clamp-1">{article.title}</h4>
+                    <p className="text-[var(--color-ink-600)] tracking-[0.1em] text-sm leading-loose line-clamp-1 font-light">{article.summary}</p>
+                  </div>
+                  
+                  <div className="w-48 flex-shrink-0 text-right space-y-2 text-xs text-[var(--color-ink-400)] tracking-widest font-light">
+                    <div>{article.publishDate}</div>
+                    <div>{article.author} · 阅 {article.views}</div>
+                  </div>
+               </Link>
+             ))}
+           </div>
+         </section>
+       </div>
+    </main>
   );
 }
