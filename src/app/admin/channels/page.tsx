@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { mockChannels, Channel } from "@/data/mock";
 import { Plus, Edit2, Trash2, X } from "lucide-react";
+import { addLog } from "@/utils/logger";
 
 export default function AdminChannels() {
   const [channels, setChannels] = useState<Channel[]>(mockChannels);
@@ -26,7 +27,11 @@ export default function AdminChannels() {
 
   const handleDelete = (id: string) => {
     if (confirm("确定要删除此频道吗？相关的文章可能会受到影响。")) {
+      const channelToDelete = channels.find(c => c.id === id);
       setChannels(channels.filter(c => c.id !== id));
+      if (channelToDelete) {
+        addLog(`撤回频道「${channelToDelete.name}」`);
+      }
     }
   };
 
@@ -36,6 +41,7 @@ export default function AdminChannels() {
 
     if (editingChannel) {
       setChannels(channels.map(c => c.id === editingChannel.id ? { ...c, ...formData } : c));
+      addLog(`修撰频道「${formData.name}」`);
     } else {
       const newChannel: Channel = {
         id: `ch-${Date.now()}`,
@@ -44,6 +50,7 @@ export default function AdminChannels() {
         articleCount: 0,
       };
       setChannels([...channels, newChannel]);
+      addLog(`新启频道「${newChannel.name}」`);
     }
     
     setIsModalOpen(false);

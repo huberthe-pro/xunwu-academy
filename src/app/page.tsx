@@ -84,7 +84,7 @@ export default function Home() {
              {mockChannels.map((cat, i) => {
                const IconComponent = iconMap[cat.name] || Info;
                return (
-                 <div key={cat.id} className={`group cursor-pointer p-12 relative flex flex-col items-center text-center ${i !== mockChannels.length - 1 ? 'md:border-r border-[var(--color-ink-200)]/60' : ''}`}>
+                 <Link href={`/channel/${cat.id}`} key={cat.id} className={`group cursor-pointer p-12 relative flex flex-col items-center text-center ${i !== mockChannels.length - 1 ? 'md:border-r border-[var(--color-ink-200)]/60' : ''}`}>
                    {/* Hover Ink Spread */}
                    <div className="absolute inset-0 bg-gradient-to-b from-transparent to-[var(--color-ink-50)] opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                    
@@ -93,7 +93,7 @@ export default function Home() {
                    <p className="text-[var(--color-ink-600)] tracking-[0.1em] text-xs leading-loose relative z-10 uppercase">{cat.description}</p>
                    
                    <div className="absolute top-4 right-4 w-1.5 h-1.5 bg-[var(--color-ink-seal)] opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                 </div>
+                 </Link>
                );
              })}
            </div>

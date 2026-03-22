@@ -75,3 +75,38 @@ export const mockArticles: Article[] = [
     views: 0,
   },
 ];
+
+export interface AdminSettings {
+  siteName: string;
+}
+
+export const mockAdminSettings: AdminSettings = {
+  siteName: "寻吾书院后台",
+};
+
+export interface AdminUser {
+  id: string;
+  username: string;
+  password?: string;
+  role: "超级执笔者" | "执笔者";
+  createdAt: string;
+}
+
+export const mockAdmins: AdminUser[] = [
+  { id: "au-1", username: "admin", password: "123", role: "超级执笔者", createdAt: "2026-03-20" },
+];
+export interface SystemLog {
+  id: string;
+  action: string;
+  operator: string;
+  timestamp: string;
+  status: "成功" | "失败";
+}
+
+export const mockSystemLogs: SystemLog[] = [
+  { id: "log-1", action: "登录系统", operator: "admin", timestamp: "2026-03-22 09:12:34", status: "成功" },
+  { id: "log-2", action: "更新频道「文化」", operator: "admin", timestamp: "2026-03-21 14:30:12", status: "成功" },
+  { id: "log-3", action: "发布文章《昆仑神柱与天人合一》", operator: "admin", timestamp: "2026-03-18 10:05:44", status: "成功" },
+  { id: "log-4", action: "尝试登录(密码错误)", operator: "未知", timestamp: "2026-03-17 22:10:05", status: "失败" },
+  { id: "log-5", action: "新建文章草稿", operator: "admin", timestamp: "2026-03-05 16:45:22", status: "成功" },
+];
