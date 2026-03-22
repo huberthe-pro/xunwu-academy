@@ -18,7 +18,7 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto px-8 md:px-16 py-16 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-12 gap-12 md:gap-8 border-b border-[var(--color-ink-200)]/60 pb-16">
-          
+
           {/* Brand/Logo Section */}
           <div className="md:col-span-4 flex flex-col gap-6">
             <div className="flex items-center gap-4">
@@ -74,7 +74,7 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-widest text-[var(--color-ink-400)] font-light">
-          <p>© {new Date().getFullYear()} 寻吾书院 - 中国传统文化。保留所有解释权。</p>
+          <p>© {new Date().getFullYear()} 寻吾书院 - 中国传统文化。 Made with ❤️ by 子珊</p>
           <div className="flex items-center gap-6">
             <Link href="/" className="hover:text-[var(--color-ink-900)] transition-colors">书院规制</Link>
             <Link href="/" className="hover:text-[var(--color-ink-900)] transition-colors">守秘契约</Link>
