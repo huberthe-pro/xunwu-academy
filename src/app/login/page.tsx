@@ -1,46 +1,45 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, User } from "lucide-react";
-import { mockAdmins, AdminUser } from "@/data/mock";
 import { addLog } from "@/utils/logger";
+import { createClient } from "@/utils/supabase/client";
 
 export default function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const [admins, setAdmins] = useState<AdminUser[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    const stored = localStorage.getItem("xunwu_admins");
-    if (stored) {
-      try {
-        setAdmins(JSON.parse(stored));
-      } catch (e) {
-        setAdmins(mockAdmins);
-      }
-    } else {
-      setAdmins(mockAdmins);
-    }
-  }, []);
-
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const currentAdmins = admins.length > 0 ? admins : mockAdmins;
-    const validAdmin = currentAdmins.find(a => a.username === username && a.password === password);
+    setLoading(true);
+    setError("");
+
+    const supabase = createClient();
+    
+    const { data: validAdmins, error: dbError } = await supabase
+      .from("admins")
+      .select("*")
+      .eq("username", username)
+      .eq("password", password)
+      .limit(1);
+
+    const validAdmin = validAdmins && validAdmins.length > 0 ? validAdmins[0] : null;
     
     if (validAdmin) {
       document.cookie = "admin_token=true; path=/";
       document.cookie = `admin_role=${encodeURIComponent(validAdmin.role)}; path=/`;
       // We pass the username temporarily to the logger by storing it
       localStorage.setItem("xunwu_current_user", validAdmin.username);
-      addLog("登堂入室 (登录系统)", "成功");
+      await addLog("登堂入室 (登录系统)", "成功");
       window.location.href = "/admin";
     } else {
-      addLog(`尝试登堂 (${username})`, "失败");
+      await addLog(`尝试登堂 (${username})`, "失败");
       setError("名讳或印信秘钥有误，请重新研墨");
     }
+    setLoading(false);
   };
 
   return (

@@ -1,17 +1,20 @@
-import { mockArticles, mockChannels } from "@/data/mock";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function ChannelPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const channel = mockChannels.find((c) => c.id === id);
+  const supabase = await createClient();
+  
+  const { data: channel } = await supabase.from('channels').select('*').eq('id', id).single();
   
   if (!channel) {
     notFound();
   }
 
-  const articles = mockArticles.filter((a) => a.category === channel.name && a.status === "已发布");
+  const { data: dbArticles } = await supabase.from('articles').select('*').eq('category', channel.name).eq('status', '已发布').order('publish_date', { ascending: false });
+  const articles = dbArticles || [];
 
   return (
     <main className="min-h-screen bg-[var(--color-zh-bg)] text-[var(--color-ink-900)] pt-16 pb-32 px-8 relative overflow-hidden">
@@ -51,7 +54,7 @@ export default async function ChannelPage({ params }: { params: Promise<{ id: st
                 </div>
                 
                 <div className="md:w-48 flex-shrink-0 md:text-right space-y-2 text-xs text-[var(--color-ink-400)] tracking-[0.2em] font-light uppercase">
-                  <div>{article.publishDate}</div>
+                  <div>{article.publish_date}</div>
                   <div>{article.author} · 阅 {article.views}</div>
                 </div>
               </Link>

@@ -1,17 +1,27 @@
 "use client";
 
-import { useState } from "react";
-import { mockChannels, Channel } from "@/data/mock";
+import { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, X } from "lucide-react";
 import { addLog } from "@/utils/logger";
+import { createClient } from "@/utils/supabase/client";
 
 export default function AdminChannels() {
-  const [channels, setChannels] = useState<Channel[]>(mockChannels);
+  const [channels, setChannels] = useState<any[]>([]);
   
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingChannel, setEditingChannel] = useState<Channel | null>(null);
+  const [editingChannel, setEditingChannel] = useState<any | null>(null);
   
   const [formData, setFormData] = useState({ name: "", description: "" });
+
+  const fetchChannels = async () => {
+    const supabase = createClient();
+    const { data } = await supabase.from('channels').select('*').order('name');
+    if (data) setChannels(data);
+  };
+
+  useEffect(() => {
+    fetchChannels();
+  }, []);
 
   const handleOpenAdd = () => {
     setEditingChannel(null);
@@ -19,38 +29,46 @@ export default function AdminChannels() {
     setIsModalOpen(true);
   };
 
-  const handleOpenEdit = (channel: Channel) => {
+  const handleOpenEdit = (channel: any) => {
     setEditingChannel(channel);
     setFormData({ name: channel.name, description: channel.description });
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("确定要删除此频道吗？相关的文章可能会受到影响。")) {
       const channelToDelete = channels.find(c => c.id === id);
+      const supabase = createClient();
+      await supabase.from('channels').delete().eq('id', id);
       setChannels(channels.filter(c => c.id !== id));
       if (channelToDelete) {
-        addLog(`撤回频道「${channelToDelete.name}」`);
+        await addLog(`撤回频道「${channelToDelete.name}」`, "成功");
       }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim() || !formData.description.trim()) return;
 
+    const supabase = createClient();
+
     if (editingChannel) {
-      setChannels(channels.map(c => c.id === editingChannel.id ? { ...c, ...formData } : c));
-      addLog(`修撰频道「${formData.name}」`);
-    } else {
-      const newChannel: Channel = {
-        id: `ch-${Date.now()}`,
+      const { data } = await supabase.from('channels').update({
         name: formData.name,
-        description: formData.description,
-        articleCount: 0,
-      };
-      setChannels([...channels, newChannel]);
-      addLog(`新启频道「${newChannel.name}」`);
+        description: formData.description
+      }).eq('id', editingChannel.id).select();
+      
+      if (data) setChannels(channels.map(c => c.id === editingChannel.id ? data[0] : c));
+      await addLog(`修撰频道「${formData.name}」`, "成功");
+    } else {
+      const { data } = await supabase.from('channels').insert({
+        name: formData.name,
+        description: formData.description
+      }).select();
+      
+      if (data) setChannels([...channels, data[0]]);
+      await addLog(`新启频道「${formData.name}」`, "成功");
     }
     
     setIsModalOpen(false);
@@ -89,7 +107,7 @@ export default function AdminChannels() {
                 <td className="p-5 text-[var(--color-ink-600)] tracking-widest">{channel.description}</td>
                 <td className="p-5 text-center">
                   <span className="px-3 py-1 bg-[var(--color-ink-50)] border border-[var(--color-ink-200)] font-mono text-xs">
-                    {channel.articleCount}
+                    {channel.article_count || 0}
                   </span>
                 </td>
                 <td className="p-5">

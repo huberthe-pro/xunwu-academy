@@ -1,18 +1,33 @@
 "use client";
 
-import { useState } from "react";
-import { mockArticles, Article, mockChannels } from "@/data/mock";
+import { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, X, Search, Filter } from "lucide-react";
 import { addLog } from "@/utils/logger";
+import { createClient } from "@/utils/supabase/client";
 
 export default function AdminContent() {
-  const [articles, setArticles] = useState<Article[]>(mockArticles);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [channels, setChannels] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editingArticle, setEditingArticle] = useState<Article | null>(null);
+  const [editingArticle, setEditingArticle] = useState<any | null>(null);
+
+  const fetchData = async () => {
+    const supabase = createClient();
+    const [artsResponse, chansResponse] = await Promise.all([
+      supabase.from('articles').select('*').order('publish_date', { ascending: false }),
+      supabase.from('channels').select('*').order('name')
+    ]);
+    if (artsResponse.data) setArticles(artsResponse.data);
+    if (chansResponse.data) setChannels(chansResponse.data);
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
   
-  const [formData, setFormData] = useState<Partial<Article>>({
+  const [formData, setFormData] = useState<any>({
     title: "",
     category: "文化",
     summary: "",
@@ -32,7 +47,7 @@ export default function AdminContent() {
     setIsModalOpen(true);
   };
 
-  const handleOpenEdit = (article: Article) => {
+  const handleOpenEdit = (article: any) => {
     setEditingArticle(article);
     setFormData({
       title: article.title,
@@ -44,38 +59,46 @@ export default function AdminContent() {
     setIsModalOpen(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm("确定要删除此文章吗？此操作不可知归（不可撤销）。")) {
       const articleToDelete = articles.find(a => a.id === id);
+      const supabase = createClient();
+      await supabase.from('articles').delete().eq('id', id);
       setArticles(articles.filter(a => a.id !== id));
       if (articleToDelete) {
-        addLog(`撤回卷帙《${articleToDelete.title}》`);
+        await addLog(`撤回卷帙《${articleToDelete.title}》`, "成功");
       }
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.title?.trim() || !formData.summary?.trim()) return;
 
+    const supabase = createClient();
+
     if (editingArticle) {
-      setArticles(articles.map(a => 
-        a.id === editingArticle.id ? { ...a, ...formData } as Article : a
-      ));
-      addLog(`修撰卷帙《${formData.title}》`);
+      const { data } = await supabase.from('articles').update({
+        title: formData.title,
+        category: formData.category,
+        summary: formData.summary,
+        author: formData.author,
+        status: formData.status
+      }).eq('id', editingArticle.id).select();
+      
+      if (data) setArticles(articles.map(a => a.id === editingArticle.id ? data[0] : a));
+      await addLog(`修撰卷帙《${formData.title}》`, "成功");
     } else {
-      const newArticle: Article = {
-        id: `art-${Date.now()}`,
-        title: formData.title!,
-        category: formData.category as any,
-        summary: formData.summary!,
-        author: formData.author!,
-        publishDate: new Date().toISOString().split('T')[0],
-        status: formData.status as any,
-        views: 0,
-      };
-      setArticles([newArticle, ...articles]);
-      addLog(`新起卷帙《${newArticle.title}》`);
+      const { data } = await supabase.from('articles').insert({
+        title: formData.title,
+        category: formData.category,
+        summary: formData.summary,
+        author: formData.author,
+        status: formData.status
+      }).select();
+      
+      if (data) setArticles([data[0], ...articles]);
+      await addLog(`新起卷帙《${formData.title}》`, "成功");
     }
     
     setIsModalOpen(false);
@@ -141,7 +164,7 @@ export default function AdminContent() {
                   </span>
                 </td>
                 <td className="p-5 text-[var(--color-ink-600)] tracking-widest">{article.author}</td>
-                <td className="p-5 text-[var(--color-ink-400)] font-mono text-xs">{article.publishDate}</td>
+                <td className="p-5 text-[var(--color-ink-400)] font-mono text-xs">{article.publish_date}</td>
                 <td className="p-5">
                   <span className={`flex items-center gap-1.5 ${article.status === '已发布' ? 'text-[var(--color-ink-seal)]' : 'text-[var(--color-ink-400)]'}`}>
                     <span className={`w-1.5 h-1.5 rounded-full ${article.status === '已发布' ? 'bg-[var(--color-ink-seal)]' : 'bg-[var(--color-ink-400)]'}`}></span>
@@ -209,7 +232,7 @@ export default function AdminContent() {
                     onChange={(e) => setFormData({...formData, category: e.target.value as any})}
                     className="w-full px-4 py-3 bg-white/50 border border-[var(--color-ink-200)] focus:border-[var(--color-ink-seal)] focus:outline-none transition-colors text-[var(--color-ink-900)] tracking-widest text-sm appearance-none"
                   >
-                    {mockChannels.map(ch => (
+                    {channels.map((ch: any) => (
                       <option key={ch.id} value={ch.name}>{ch.name}</option>
                     ))}
                   </select>

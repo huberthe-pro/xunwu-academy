@@ -1,11 +1,13 @@
-import { mockArticles } from "@/data/mock";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { createClient } from "@/utils/supabase/server";
 
 export default async function ArticleDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const article = mockArticles.find((a) => a.id === id);
+  const supabase = await createClient();
+  
+  const { data: article } = await supabase.from('articles').select('*').eq('id', id).eq('status', '已发布').single();
   
   if (!article) {
     notFound();
@@ -37,9 +39,9 @@ export default async function ArticleDetail({ params }: { params: Promise<{ id: 
           <div className="flex items-center gap-6 text-[var(--color-ink-400)] tracking-[0.2em] text-xs font-light border-b border-[var(--color-ink-200)] pb-8">
             <span className="text-[var(--color-ink-800)]">{article.author}</span>
             <span>|</span>
-            <span>{article.publishDate}</span>
+            <span>{article.publish_date}</span>
             <span>|</span>
-            <span>阅 {article.views.toLocaleString()}</span>
+            <span>阅 {(article.views || 0).toLocaleString()}</span>
           </div>
         </header>
 

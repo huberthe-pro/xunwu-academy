@@ -1,14 +1,15 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { mockAdminSettings, AdminSettings, mockAdmins, AdminUser, SystemLog } from "@/data/mock";
+import { mockAdminSettings, AdminSettings, SystemLog } from "@/data/mock";
 import { Settings, Save, LogOut, Clock, ShieldCheck, AlertCircle, Users, Plus, Trash2, X } from "lucide-react";
-import { getLogs, addLog } from "@/utils/logger";
+import { addLog } from "@/utils/logger";
+import { createClient } from "@/utils/supabase/client";
 
 export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<AdminSettings>(mockAdminSettings);
-  const [admins, setAdmins] = useState<AdminUser[]>(mockAdmins);
-  const [logs, setLogs] = useState<SystemLog[]>([]);
+  const [admins, setAdmins] = useState<any[]>([]);
+  const [logs, setLogs] = useState<any[]>([]);
   const [isSaved, setIsSaved] = useState(false);
   const [activeTab, setActiveTab] = useState<"settings" | "admins" | "logs">("settings");
   
@@ -17,30 +18,29 @@ export default function AdminSettingsPage() {
   const [newAdmin, setNewAdmin] = useState({ username: "", password: "", role: "执笔者" as any });
 
   useEffect(() => {
-    // Initial fetch
-    setLogs(getLogs());
+    // Initial fetch for logs
+    const fetchLogs = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.from('system_logs').select('*').order('timestamp', { ascending: false }).limit(50);
+      if (data) setLogs(data);
+    };
+    fetchLogs();
 
     // Listen to changes
-    const logListener = () => setLogs(getLogs());
+    const logListener = () => fetchLogs();
     window.addEventListener("xunwuLogsUpdated", logListener);
     
     return () => window.removeEventListener("xunwuLogsUpdated", logListener);
   }, []);
 
   useEffect(() => {
-    const stored = localStorage.getItem("xunwu_admins");
-    if (stored) {
-      try {
-        setAdmins(JSON.parse(stored));
-      } catch (e) {}
-    }
+    const fetchAdmins = async () => {
+      const supabase = createClient();
+      const { data } = await supabase.from('admins').select('*').order('created_at', { ascending: true });
+      if (data) setAdmins(data);
+    };
+    fetchAdmins();
   }, []);
-
-  useEffect(() => {
-    if (admins !== mockAdmins) {
-      localStorage.setItem("xunwu_admins", JSON.stringify(admins));
-    }
-  }, [admins]);
 
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,32 +49,40 @@ export default function AdminSettingsPage() {
     setTimeout(() => setIsSaved(false), 3000);
   };
 
-  const handleAddAdmin = (e: React.FormEvent) => {
+  const handleAddAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newAdmin.username || !newAdmin.password) return;
-    const admin: AdminUser = {
-      id: `au-${Date.now()}`,
+    
+    const supabase = createClient();
+    const { data, error } = await supabase.from('admins').insert({
       username: newAdmin.username,
       password: newAdmin.password,
-      role: newAdmin.role,
-      createdAt: new Date().toISOString().split('T')[0]
-    };
-    setAdmins([...admins, admin]);
-    addLog(`新授印信：${admin.username} (${admin.role})`, "成功");
+      role: newAdmin.role
+    }).select();
+    
+    if (error) {
+      alert("添加失败: " + error.message);
+      return;
+    }
+    
+    if (data) setAdmins([...admins, data[0]]);
+    await addLog(`新授印信：${newAdmin.username} (${newAdmin.role})`, "成功");
     setIsAddingAdmin(false);
     setNewAdmin({ username: "", password: "", role: "执笔者" });
   };
 
-  const handleDeleteAdmin = (id: string) => {
+  const handleDeleteAdmin = async (id: string) => {
     if (admins.length <= 1) {
       alert("至少需要保留一位超级执笔者。");
       return;
     }
     const adminToDelete = admins.find(a => a.id === id);
     if (confirm("确定要褫夺此执笔者的权限吗？")) {
+      const supabase = createClient();
+      await supabase.from('admins').delete().eq('id', id);
       setAdmins(admins.filter(a => a.id !== id));
       if (adminToDelete) {
-        addLog(`褫夺印信：${adminToDelete.username}`, "成功");
+        await addLog(`褫夺印信：${adminToDelete.username}`, "成功");
       }
     }
   };
@@ -203,7 +211,7 @@ export default function AdminSettingsPage() {
                     </span>
                   </td>
                   <td className="p-5 text-[var(--color-ink-500)] font-mono text-xs">
-                    {admin.createdAt}
+                    {new Date(admin.created_at || "").toLocaleDateString("zh-CN")}
                   </td>
                   <td className="p-5 text-center">
                      <button onClick={() => handleDeleteAdmin(admin.id)} className="text-[var(--color-ink-400)] hover:text-[var(--color-ink-seal)] transition-colors" title="褫夺印信 (删除)">

@@ -1,9 +1,29 @@
-import { mockArticles } from "@/data/mock";
+"use client";
+
+import { useState, useEffect } from "react";
 import { BookOpen, Eye, Layers } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 export default function AdminDashboard() {
-  const publishedArticles = mockArticles.filter((a) => a.status === "已发布");
-  const totalViews = publishedArticles.reduce((acc, curr) => acc + curr.views, 0);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [channelCount, setChannelCount] = useState<number>(0);
+
+  useEffect(() => {
+    const fetchDashboard = async () => {
+      const supabase = createClient();
+      const [artsRes, chansRes] = await Promise.all([
+        supabase.from('articles').select('*').order('publish_date', { ascending: false }),
+        supabase.from('channels').select('id', { count: 'exact' })
+      ]);
+      
+      if (artsRes.data) setArticles(artsRes.data);
+      if (chansRes.count !== null) setChannelCount(chansRes.count);
+    };
+    fetchDashboard();
+  }, []);
+
+  const publishedArticles = articles.filter((a) => a.status === "已发布");
+  const totalViews = publishedArticles.reduce((acc, curr) => acc + (curr.views || 0), 0);
 
   return (
     <div className="p-8 font-sans pb-32">
@@ -20,7 +40,7 @@ export default function AdminDashboard() {
             <BookOpen className="w-5 h-5 text-[var(--color-ink-300)]" />
           </div>
           <div className="text-4xl font-light text-[var(--color-ink-900)] tracking-wider">
-            {mockArticles.length}
+            {articles.length}
             <span className="text-base text-[var(--color-ink-400)] ml-2 tracking-widest">卷</span>
           </div>
         </div>
@@ -32,7 +52,7 @@ export default function AdminDashboard() {
             <Layers className="w-5 h-5 text-[var(--color-ink-300)]" />
           </div>
           <div className="text-4xl font-light text-[var(--color-ink-900)] tracking-wider">
-            4
+            {channelCount}
             <span className="text-base text-[var(--color-ink-400)] ml-2 tracking-widest">栏</span>
           </div>
         </div>
@@ -71,7 +91,7 @@ export default function AdminDashboard() {
                 <p className="text-sm text-[var(--color-ink-500)] font-light tracking-wide line-clamp-1 max-w-2xl">{article.summary}</p>
               </div>
               <div className="text-sm text-[var(--color-ink-400)] sm:text-right flex sm:block justify-between items-center sm:min-w-[120px] tracking-widest border-t sm:border-t-0 border-[var(--color-ink-200)]/30 pt-3 sm:pt-0 mt-2 sm:mt-0">
-                <div className="font-mono text-xs">{article.publishDate}</div>
+                <div className="font-mono text-xs">{article.publish_date}</div>
                 <div className="mt-1.5 flex items-center justify-end gap-1.5 text-xs">
                   <Eye className="w-3.5 h-3.5" />
                   {article.views.toLocaleString()}

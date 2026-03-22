@@ -1,10 +1,19 @@
 import Image from "next/image";
 import { Info, BookOpen, CalendarDays, HeartHandshake } from "lucide-react";
 import Link from "next/link";
-import { mockArticles, mockChannels } from "@/data/mock";
 import MobileNav from "@/components/MobileNav";
+import { createClient } from "@/utils/supabase/server";
 
-export default function Home() {
+export default async function Home() {
+  const supabase = await createClient();
+  const [channelsRes, articlesRes] = await Promise.all([
+    supabase.from('channels').select('*').order('name'),
+    supabase.from('articles').select('*').eq('status', '已发布').order('publish_date', { ascending: false }).limit(4)
+  ]);
+  
+  const mockChannels = channelsRes.data || [];
+  const mockArticles = articlesRes.data || [];
+
   const iconMap: Record<string, any> = {
     "介绍": Info,
     "文化": BookOpen,
@@ -91,7 +100,7 @@ export default function Home() {
             <div className="absolute bottom-0 right-0 w-8 h-0.5 bg-[var(--color-ink-seal)]"></div>
           </div>
           <div className="flex flex-col">
-            {mockArticles.filter((a) => a.status === "已发布").slice(0, 4).map((article, index) => (
+            {mockArticles.map((article, index) => (
               <Link href={`/article/${article.id}`} key={article.id} className="group py-8 md:py-12 border-b border-[var(--color-ink-200)]/60 flex flex-col md:flex-row md:items-center gap-6 md:gap-16 hover:bg-[var(--color-ink-50)]/50 transition-colors duration-700 px-2 md:px-6 md:-mx-6">
                 <div className="w-auto md:w-32 flex-shrink-0">
                   <span className="text-xs tracking-[0.2em] text-[var(--color-ink-600)] border border-[var(--color-ink-200)] px-4 py-2 block text-center group-hover:border-[var(--color-ink-800)] transition-colors duration-500">{article.category}</span>
@@ -103,7 +112,7 @@ export default function Home() {
                 </div>
 
                 <div className="w-full md:w-48 flex-shrink-0 text-left md:text-right space-y-1 md:space-y-2 text-xs text-[var(--color-ink-400)] tracking-widest font-light flex md:block justify-between items-center">
-                  <div>{article.publishDate}</div>
+                  <div>{article.publish_date}</div>
                   <div>{article.author} · 阅 {article.views}</div>
                 </div>
               </Link>
