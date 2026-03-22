@@ -5,15 +5,19 @@ ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE system_logs ENABLE ROW LEVEL SECURITY;
 
 -- Allow public read access to admins (needed since login is client-side)
+DROP POLICY IF EXISTS "public_select_admins" ON admins;
 CREATE POLICY "public_select_admins" ON admins FOR SELECT USING (true);
 
 -- Allow public full access to channels
+DROP POLICY IF EXISTS "public_all_channels" ON channels;
 CREATE POLICY "public_all_channels" ON channels FOR ALL USING (true) WITH CHECK (true);
 
 -- Allow public full access to articles
+DROP POLICY IF EXISTS "public_all_articles" ON articles;
 CREATE POLICY "public_all_articles" ON articles FOR ALL USING (true) WITH CHECK (true);
 
 -- Allow public full access to system_logs
+DROP POLICY IF EXISTS "public_all_system_logs" ON system_logs;
 CREATE POLICY "public_all_system_logs" ON system_logs FOR ALL USING (true) WITH CHECK (true);
 
 
