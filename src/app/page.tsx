@@ -2,6 +2,7 @@ import Image from "next/image";
 import { Info, BookOpen, CalendarDays, HeartHandshake } from "lucide-react";
 import Link from "next/link";
 import { mockArticles, mockChannels } from "@/data/mock";
+import MobileNav from "@/components/MobileNav";
 
 export default function Home() {
   const iconMap: Record<string, any> = {
@@ -33,15 +34,16 @@ export default function Home() {
              <Link key={channel.id} href={`/channel/${channel.id}`} className="hover:text-[var(--color-ink-900)] transition-colors">
                {channel.name}
              </Link>
-           ))}
-         </nav>
-       </header>
+            ))}
+          </nav>
+          <MobileNav />
+        </header>
 
        <div className="max-w-7xl mx-auto px-8 md:px-16 flex flex-col pb-32">
-         {/* Hero Section */}
-         <section className="mb-40 flex flex-col lg:flex-row items-center gap-24 relative mt-16">
-           <div className="flex-1 space-y-12 relative z-10">
-             <h2 className="text-6xl md:text-8xl font-light leading-[1.3] tracking-[0.1em] text-[var(--color-ink-900)] selection:bg-[var(--color-ink-seal)] selection:text-white">
+          {/* Hero Section */}
+          <section className="mb-24 md:mb-40 flex flex-col md:flex-row items-center gap-16 md:gap-24 relative mt-8 md:mt-16">
+            <div className="flex-1 space-y-8 md:space-y-12 relative z-10 w-full">
+              <h2 className="text-5xl sm:text-6xl md:text-8xl font-light leading-[1.3] tracking-[0.1em] text-[var(--color-ink-900)] selection:bg-[var(--color-ink-seal)] selection:text-white">
                行云<br/>
                <span className="text-[var(--color-ink-400)] italic">流水</span><br/>
                <span className="ml-[1em] relative inline-block">
@@ -58,9 +60,8 @@ export default function Home() {
                </button>
              </div>
            </div>
-           
-           <div className="flex-1 w-full relative h-[600px] flex justify-end">
-             {/* Ink Wash Abstract Graphic */}
+                      <div className="flex-1 w-full relative h-[400px] md:h-[600px] flex justify-end">
+              {/* Ink Wash Abstract Graphic */}
              <div className="w-[80%] h-full border-r border-b border-[var(--color-ink-200)] relative opacity-70">
                <div className="absolute top-10 left-10 w-full h-full border-t border-l border-[var(--color-ink-50)]"></div>
                <div className="absolute top-[20%] right-[-10%] text-6xl text-[var(--color-ink-50)] tracking-widest" style={{ writingMode: 'vertical-rl' }}>
@@ -77,9 +78,9 @@ export default function Home() {
            </div>
          </section>
 
-         {/* Categories Grid (Minimalist Lines) */}
-         <section className="space-y-16 mb-40">
-           <div className="grid grid-cols-1 md:grid-cols-4 border-y border-[var(--color-ink-200)]/60">
+          {/* Categories Grid (Minimalist Lines) */}
+          <section className="space-y-16 mb-24 md:mb-40">
+            <div className="grid grid-cols-2 lg:grid-cols-4 border-y border-[var(--color-ink-200)]/60">
              {mockChannels.map((cat, i) => {
                const IconComponent = iconMap[cat.name] || Info;
                return (
@@ -105,11 +106,10 @@ export default function Home() {
              <span className="text-[var(--color-ink-400)] tracking-widest text-xs uppercase">最新修撰</span>
              <div className="absolute bottom-0 right-0 w-8 h-0.5 bg-[var(--color-ink-seal)]"></div>
            </div>
-           
-           <div className="flex flex-col">
-             {mockArticles.filter((a) => a.status === "已发布").slice(0, 4).map((article, index) => (
-               <Link href={`/article/${article.id}`} key={article.id} className="group py-12 border-b border-[var(--color-ink-200)]/60 flex flex-col md:flex-row md:items-center gap-8 md:gap-16 hover:bg-[var(--color-ink-50)]/50 transition-colors duration-700 px-6 -mx-6">                 
-                  <div className="w-32 flex-shrink-0">
+                      <div className="flex flex-col">
+              {mockArticles.filter((a) => a.status === "已发布").slice(0, 4).map((article, index) => (
+                <Link href={`/article/${article.id}`} key={article.id} className="group py-8 md:py-12 border-b border-[var(--color-ink-200)]/60 flex flex-col md:flex-row md:items-center gap-6 md:gap-16 hover:bg-[var(--color-ink-50)]/50 transition-colors duration-700 px-2 md:px-6 md:-mx-6">                 
+                  <div className="w-auto md:w-32 flex-shrink-0">
                     <span className="text-xs tracking-[0.2em] text-[var(--color-ink-600)] border border-[var(--color-ink-200)] px-4 py-2 block text-center group-hover:border-[var(--color-ink-800)] transition-colors duration-500">{article.category}</span>
                   </div>
                   
@@ -118,7 +118,7 @@ export default function Home() {
                     <p className="text-[var(--color-ink-600)] tracking-[0.1em] text-sm leading-loose line-clamp-1 font-light">{article.summary}</p>
                   </div>
                   
-                  <div className="w-48 flex-shrink-0 text-right space-y-2 text-xs text-[var(--color-ink-400)] tracking-widest font-light">
+                  <div className="w-full md:w-48 flex-shrink-0 text-left md:text-right space-y-1 md:space-y-2 text-xs text-[var(--color-ink-400)] tracking-widest font-light flex md:block justify-between items-center">
                     <div>{article.publishDate}</div>
                     <div>{article.author} · 阅 {article.views}</div>
                   </div>

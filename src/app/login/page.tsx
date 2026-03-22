@@ -49,7 +49,7 @@ export default function Login() {
       <div className="absolute -top-40 -right-40 w-96 h-96 bg-[var(--color-ink-100)] rounded-full blur-3xl opacity-50"></div>
       <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-[var(--color-ink-100)] rounded-full blur-3xl opacity-50"></div>
 
-      <div className="w-full max-w-md relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
+      <div className="w-full max-w-md px-6 md:px-0 relative z-10 animate-in fade-in slide-in-from-bottom-8 duration-700">
         <div className="text-center mb-10">
           <div className="flex justify-center mb-6">
             <div className="w-12 h-12 bg-[var(--color-ink-900)] text-[var(--color-zh-bg)] font-serif text-2xl flex items-center justify-center relative">

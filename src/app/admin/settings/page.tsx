@@ -85,8 +85,8 @@ export default function AdminSettingsPage() {
   };
 
   return (
-    <div className="p-8 font-sans pb-32">
-      <header className="mb-10 flex items-center justify-between">
+    <div className="p-4 md:p-8 font-sans pb-32">
+      <header className="mb-6 md:mb-10 flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-[var(--color-ink-900)] tracking-[0.1em]">系统设置</h1>
           <p className="text-[var(--color-ink-600)] mt-2 font-light tracking-widest text-sm">执掌书院枢纽，审视过往行迹。</p>

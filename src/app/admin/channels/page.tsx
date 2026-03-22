@@ -57,8 +57,8 @@ export default function AdminChannels() {
   };
 
   return (
-    <div className="p-8 font-sans pb-32">
-      <header className="mb-10 flex items-center justify-between">
+    <div className="p-4 md:p-8 font-sans pb-32">
+      <header className="mb-6 md:mb-10 flex flex-col md:flex-row md:items-center justify-between gap-4 md:gap-0">
         <div>
           <h1 className="text-2xl font-bold text-[var(--color-ink-900)] tracking-[0.1em]">频道管理</h1>
           <p className="text-[var(--color-ink-600)] mt-2 font-light tracking-widest text-sm">在这里配置前台展示的核心板块与分类。</p>
@@ -69,8 +69,8 @@ export default function AdminChannels() {
         </button>
       </header>
 
-      <div className="bg-white/60 border border-[var(--color-ink-200)] relative">
-        <table className="w-full text-left border-collapse">
+      <div className="bg-white/60 border border-[var(--color-ink-200)] relative overflow-x-auto">
+        <table className="w-full text-left border-collapse min-w-[700px]">
           <thead>
             <tr className="border-b border-[var(--color-ink-200)] bg-[var(--color-ink-50)]/50 text-[var(--color-ink-600)] text-sm tracking-widest font-normal">
               <th className="p-5 font-medium">频道名称</th>
@@ -119,7 +119,7 @@ export default function AdminChannels() {
       {/* Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-[var(--color-ink-900)]/20 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-[var(--color-zh-bg)] border border-[var(--color-ink-200)] w-full max-w-lg shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-[var(--color-zh-bg)] border border-[var(--color-ink-200)] w-[95%] md:w-full max-w-lg shadow-2xl relative animate-in fade-in zoom-in-95 duration-200">
             <button onClick={() => setIsModalOpen(false)} className="absolute top-6 right-6 text-[var(--color-ink-400)] hover:text-[var(--color-ink-900)] transition-colors">
               <X className="w-5 h-5" />
             </button>

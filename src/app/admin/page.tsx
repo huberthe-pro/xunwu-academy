@@ -60,7 +60,7 @@ export default function AdminDashboard() {
         </div>
         <div className="divide-y divide-[var(--color-ink-200)]/60">
           {publishedArticles.map((article) => (
-            <div key={article.id} className="p-6 flex items-center justify-between hover:bg-[var(--color-ink-50)]/50 transition-colors">
+            <div key={article.id} className="p-4 md:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-[var(--color-ink-50)]/50 transition-colors">
               <div className="space-y-2">
                 <div className="flex items-center gap-3">
                   <h3 className="font-medium text-[var(--color-ink-900)] tracking-widest">{article.title}</h3>
@@ -70,7 +70,7 @@ export default function AdminDashboard() {
                 </div>
                 <p className="text-sm text-[var(--color-ink-500)] font-light tracking-wide line-clamp-1 max-w-2xl">{article.summary}</p>
               </div>
-              <div className="text-sm text-[var(--color-ink-400)] text-right min-w-[120px] tracking-widest">
+              <div className="text-sm text-[var(--color-ink-400)] sm:text-right flex sm:block justify-between items-center sm:min-w-[120px] tracking-widest border-t sm:border-t-0 border-[var(--color-ink-200)]/30 pt-3 sm:pt-0 mt-2 sm:mt-0">
                 <div className="font-mono text-xs">{article.publishDate}</div>
                 <div className="mt-1.5 flex items-center justify-end gap-1.5 text-xs">
                   <Eye className="w-3.5 h-3.5" />

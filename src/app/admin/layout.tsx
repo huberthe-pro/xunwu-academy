@@ -2,6 +2,7 @@ import Link from "next/link";
 import { LayoutDashboard, FileText, Settings, ArrowLeft, Layers } from "lucide-react";
 import LogoutButton from "./LogoutButton";
 import { cookies } from "next/headers";
+import MobileAdminHeader from "@/components/MobileAdminHeader";
 
 export default async function AdminLayout({
   children,
@@ -14,9 +15,12 @@ export default async function AdminLayout({
   const isSuperAdmin = role === "超级执笔者";
 
   return (
-    <div className="min-h-screen bg-[var(--color-zh-bg)] flex text-[var(--color-ink-800)]">
-      {/* Sidebar */}
-      <aside className="w-64 bg-white/50 border-r border-[var(--color-ink-200)] flex flex-col">
+    <div className="min-h-screen bg-[var(--color-zh-bg)] flex flex-col md:flex-row text-[var(--color-ink-800)]">
+      {/* Mobile Header */}
+      <MobileAdminHeader isSuperAdmin={isSuperAdmin} />
+
+      {/* Desktop Sidebar */}
+      <aside className="hidden md:flex w-64 bg-white/50 border-r border-[var(--color-ink-200)] flex-col flex-shrink-0 h-screen overflow-y-auto">
         <div className="p-6 border-b border-[var(--color-ink-200)] flex items-center justify-between">
           <span className="text-xl font-bold tracking-[0.2em] text-[var(--color-ink-seal)]">寻吾书院后台</span>
         </div>
@@ -57,7 +61,7 @@ export default async function AdminLayout({
       </aside>
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto bg-[#f8f9fa]">
+      <main className="flex-1 h-[calc(100vh-65px)] md:h-screen overflow-auto bg-[#f8f9fa]">
         {children}
       </main>
     </div>
