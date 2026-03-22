@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   /* 暖色宣纸 / 古籍纸张色板，提升阅读舒适度 */

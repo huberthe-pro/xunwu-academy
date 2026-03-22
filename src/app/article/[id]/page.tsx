@@ -55,9 +55,16 @@ export default async function ArticleDetail({ params }: { params: Promise<{ id: 
             {article.summary}
           </p>
           
-          <p className="leading-[2.2] tracking-[0.15em] font-light text-justify text-[var(--color-ink-600)] mt-8">
-            水墨流转，古意盎然。此处为详情内容占位符。在真实的渲染中，我们将通过优雅的行距与段间留白，将文章娓娓道来。昆仑的山风、先民的呼唤，在这里都化为横竖撇捺间的呼吸感。
-          </p>
+          {article.content ? (
+            <div 
+              className="mt-16 font-light text-justify leading-[2.2] tracking-[0.1em] text-[var(--color-ink-800)] tiptap-content"
+              dangerouslySetInnerHTML={{ __html: article.content }} 
+            />
+          ) : (
+            <p className="leading-[2.2] tracking-[0.15em] font-light text-justify text-[var(--color-ink-600)] mt-8">
+              水墨流转，古意盎然。此处为详情内容占位符。在真实的渲染中，我们将通过优雅的行距与段间留白，将文章娓娓道来。昆仑的山风、先民的呼唤，在这里都化为横竖撇捺间的呼吸感。
+            </p>
+          )}
           
           {/* Footer Signature Block */}
           <div className="mt-32 pt-16 flex flex-col items-center justify-center opacity-80">
