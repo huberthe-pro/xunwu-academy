@@ -1,20 +1,26 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 寻吾书院 (Xunwu Academy)
+
+A minimalist, ink-wash themed academy platform and CMS, built with cutting-edge React tooling tailored for an immersive traditional Chinese cultural experience.
+
+## Tech Stack
+- **Framework**: [Next.js](https://nextjs.org) (App Router, React 19)
+- **Styling**: Tailwind CSS v4 + `@tailwindcss/typography`
+- **Backend / BaaS**: [Supabase](https://supabase.com) (PostgreSQL Database, Auth, Storage)
+- **Rich Text**: [Tiptap](https://tiptap.dev/)
+- **Icons**: Lucide React
 
 ## Getting Started
 
-First, run the development server:
+First, ensure your `.env.local` contains the requisite Supabase credentials:
+```env
+NEXT_PUBLIC_SUPABASE_URL=...
+NEXT_PUBLIC_SUPABASE_ANON_KEY=...
+```
+
+Then, run the development server:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
