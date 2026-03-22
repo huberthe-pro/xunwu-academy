@@ -74,7 +74,8 @@ export default function Footer() {
 
         {/* Copyright */}
         <div className="pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs tracking-widest text-[var(--color-ink-400)] font-light">
-          <p>© {new Date().getFullYear()} 寻吾书院 - 中国传统文化。 Made with ❤️ by 子珊</p>
+          <p>v0.1.0 © {new Date().getFullYear()} 寻吾书院 - 中国传统文化。 </p>
+          <p>Made with ❤️ by 子珊 </p>
           <div className="flex items-center gap-6">
             <Link href="/" className="hover:text-[var(--color-ink-900)] transition-colors">书院规制</Link>
             <Link href="/" className="hover:text-[var(--color-ink-900)] transition-colors">守秘契约</Link>
