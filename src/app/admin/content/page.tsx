@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Plus, Edit2, Trash2, X, Search, Filter } from "lucide-react";
 import { addLog } from "@/utils/logger";
 import { createClient } from "@/utils/supabase/client";
+import RichTextEditor from "@/components/RichTextEditor";
 
 export default function AdminContent() {
   const [articles, setArticles] = useState<any[]>([]);
@@ -31,6 +32,7 @@ export default function AdminContent() {
     title: "",
     category: "文化",
     summary: "",
+    content: "",
     author: "寻吾书院",
     status: "草稿"
   });
@@ -41,6 +43,7 @@ export default function AdminContent() {
       title: "",
       category: "文化",
       summary: "",
+      content: "",
       author: "寻吾书院",
       status: "草稿"
     });
@@ -53,6 +56,7 @@ export default function AdminContent() {
       title: article.title,
       category: article.category,
       summary: article.summary,
+      content: article.content || "",
       author: article.author,
       status: article.status
     });
@@ -82,6 +86,7 @@ export default function AdminContent() {
         title: formData.title,
         category: formData.category,
         summary: formData.summary,
+        content: formData.content,
         author: formData.author,
         status: formData.status
       }).eq('id', editingArticle.id).select();
@@ -93,6 +98,7 @@ export default function AdminContent() {
         title: formData.title,
         category: formData.category,
         summary: formData.summary,
+        content: formData.content,
         author: formData.author,
         status: formData.status
       }).select();
@@ -256,10 +262,20 @@ export default function AdminContent() {
                   value={formData.summary}
                   onChange={(e) => setFormData({...formData, summary: e.target.value})}
                   required
-                  rows={4}
+                  rows={3}
                   className="w-full px-4 py-3 bg-white/50 border border-[var(--color-ink-200)] focus:border-[var(--color-ink-seal)] focus:outline-none transition-colors text-[var(--color-ink-900)] placeholder:text-[var(--color-ink-200)] tracking-widest text-sm resize-none"
                   placeholder="简述文章要旨"
                 />
+              </div>
+
+              <div className="space-y-3">
+                <label className="block text-sm tracking-widest text-[var(--color-ink-800)]">文章正文</label>
+                <div className="border border-[var(--color-ink-200)] focus-within:border-[var(--color-ink-seal)] transition-colors">
+                  <RichTextEditor 
+                    value={formData.content} 
+                    onChange={(val) => setFormData({...formData, content: val})} 
+                  />
+                </div>
               </div>
 
               <div className="space-y-3">
