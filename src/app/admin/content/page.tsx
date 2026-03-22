@@ -34,6 +34,7 @@ export default function AdminContent() {
     summary: "",
     content: "",
     author: "寻吾书院",
+    views: 0,
     status: "草稿"
   });
 
@@ -45,6 +46,7 @@ export default function AdminContent() {
       summary: "",
       content: "",
       author: "寻吾书院",
+      views: 0,
       status: "草稿"
     });
     setIsModalOpen(true);
@@ -58,6 +60,7 @@ export default function AdminContent() {
       summary: article.summary,
       content: article.content || "",
       author: article.author,
+      views: article.views || 0,
       status: article.status
     });
     setIsModalOpen(true);
@@ -88,6 +91,7 @@ export default function AdminContent() {
         summary: formData.summary,
         content: formData.content,
         author: formData.author,
+        views: Number(formData.views),
         status: formData.status
       }).eq('id', editingArticle.id).select();
       
@@ -100,6 +104,7 @@ export default function AdminContent() {
         summary: formData.summary,
         content: formData.content,
         author: formData.author,
+        views: Number(formData.views),
         status: formData.status
       }).select();
       
@@ -251,6 +256,31 @@ export default function AdminContent() {
                     value={formData.author}
                     onChange={(e) => setFormData({...formData, author: e.target.value})}
                     required
+                    className="w-full px-4 py-3 bg-white/50 border border-[var(--color-ink-200)] focus:border-[var(--color-ink-seal)] focus:outline-none transition-colors text-[var(--color-ink-900)] tracking-widest text-sm"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <label className="block text-sm tracking-widest text-[var(--color-ink-800)]">修撰大儒</label>
+                  <input 
+                    type="text"
+                    value={formData.author}
+                    onChange={(e) => setFormData({...formData, author: e.target.value})}
+                    required
+                    className="w-full px-4 py-3 bg-white/50 border border-[var(--color-ink-200)] focus:border-[var(--color-ink-seal)] focus:outline-none transition-colors text-[var(--color-ink-900)] tracking-widest text-sm"
+                  />
+                </div>
+                
+                <div className="space-y-3">
+                  <label className="block text-sm tracking-widest text-[var(--color-ink-800)]">基础阅量</label>
+                  <input 
+                    type="number"
+                    value={formData.views}
+                    onChange={(e) => setFormData({...formData, views: e.target.value})}
+                    required
+                    min={0}
                     className="w-full px-4 py-3 bg-white/50 border border-[var(--color-ink-200)] focus:border-[var(--color-ink-seal)] focus:outline-none transition-colors text-[var(--color-ink-900)] tracking-widest text-sm"
                   />
                 </div>
