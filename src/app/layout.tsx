@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Noto_Serif_SC, Geist } from "next/font/google";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const notoSerifSC = Noto_Serif_SC({
@@ -26,7 +27,10 @@ export default function RootLayout({
   return (
     <html lang="zh-CN">
       <body className={`${notoSerifSC.variable} ${geistSans.variable} antialiased min-h-screen flex flex-col font-serif`}>
-        {children}
+        <div className="flex-1 flex flex-col bg-[var(--color-zh-bg)]">
+          {children}
+        </div>
+        <Footer />
       </body>
     </html>
   );

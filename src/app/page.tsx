@@ -34,7 +34,6 @@ export default function Home() {
                {channel.name}
              </Link>
            ))}
-           <Link href="/admin" className="hover:text-[var(--color-ink-seal)] transition-colors relative after:content-[''] after:absolute after:-bottom-3 after:left-1/2 after:-translate-x-1/2 after:w-1 after:h-1 after:rounded-full after:bg-[var(--color-ink-seal)] after:opacity-0 hover:after:opacity-100 after:transition-opacity duration-300">卷阁</Link>
          </nav>
        </header>
 
