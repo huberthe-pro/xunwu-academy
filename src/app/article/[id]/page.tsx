@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { createClient } from "@/utils/supabase/server";
+import ViewCounter from "@/components/ViewCounter";
 
 export default async function ArticleDetail({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -15,6 +16,7 @@ export default async function ArticleDetail({ params }: { params: Promise<{ id: 
 
   return (
     <main className="min-h-screen bg-[var(--color-zh-bg)] text-[var(--color-ink-900)] pt-16 pb-32 px-8 relative overflow-hidden">
+      <ViewCounter id={id} />
       {/* Decorative Ink Wash Watermark */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--color-ink-50)] rounded-full blur-3xl opacity-50 -z-10 -translate-y-1/2 translate-x-1/2"></div>
       
